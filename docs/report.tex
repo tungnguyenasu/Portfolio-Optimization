@@ -1,0 +1,245 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{booktabs,array,longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\graphicspath{{../figures/}{figures/}}
+
+% ---------- theorem environments ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+
+% ---------- macros ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\w}{\bm{w}}
+\newcommand{\bmu}{\bm{\mu}}
+\newcommand{\by}[1]{\quad\text{\small\color{blue!60!black}[#1]}}   % name the rule at each step: a &= b \by{linearity}
+\newcommand{\owner}[2]{\par\smallskip\noindent\textit{Owner: #1 \quad Checked by: #2}\par}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+\title{DS5020 Final Project -- Iteration 2\\[2pt]
+\large Portfolio Optimization: The Math Foundation}
+\author{\todo{Member 1} \and \todo{Member 2} \and \todo{Member 3} \and \todo{Member 4}\\[4pt]
+\small Project Leader (Iteration 2): \todo{name}}
+\date{Fall 2026}
+
+\begin{document}
+\maketitle
+
+% =====================================================================
+\section*{Task Assignment}
+\begin{tabular}{@{}llll@{}}
+\toprule
+ID & Task & Owner & Checker \\
+\midrule
+D1 / Q1 & Portfolio return and risk                 & \todo{} & \todo{} \\
+D2 / Q2 & $\Sigma$ is positive semi-definite         & \todo{} & \todo{} \\
+D3 / Q3 & Global minimum-variance portfolio          & \todo{} & \todo{} \\
+D4 / Q4 & Target-return constraint, $2\times2$ system & \todo{} & \todo{} \\
+D5 / Q5 & Efficient frontier is a parabola           & \todo{} & \todo{} \\
+S1      & Data loading and description               & \todo{} & \todo{} \\
+S2      & Simulation check                           & \todo{} & \todo{} \\
+\bottomrule
+\end{tabular}
+
+% =====================================================================
+\section{Notation}
+\begin{longtable}{@{}l p{8.2cm} l@{}}
+\toprule
+Symbol & Meaning & Dimension \\
+\midrule
+$N$ & number of assets (industry portfolios) & scalar, $N=10$ \\
+$T$ & number of time periods (months) & scalar \\
+$R_{t,i}$ & simple return of asset $i$ in period $t$ & scalar \\
+$R$ & data matrix of returns; row $t$ = period, column $i$ = asset & $\R^{T\times N}$ \\
+$\bm{r}_t$ & return vector in period $t$ (row $t$ of $R$, as a column) & $\R^{N}$ \\
+$\bmu$ & expected return vector, $\mu_i = \E[R_i]$ & $\R^{N}$ \\
+$\Sigma$ & covariance matrix, $\Sigma_{ij} = \Cov(R_i,R_j)$ & $\R^{N\times N}$ \\
+$\hat\bmu,\ \hat\Sigma$ & sample mean and sample covariance & $\R^{N}$, $\R^{N\times N}$ \\
+$\w$ & portfolio weights, $w_i$ = fraction of wealth in asset $i$ & $\R^{N}$ \\
+$\one$ & vector of ones & $\R^{N}$ \\
+$\w^*$ & global minimum-variance weights & $\R^{N}$ \\
+$r$ & target expected return & scalar \\
+$\lambda,\ \lambda_1,\ \lambda_2$ & Lagrange multipliers & scalars \\
+$a,b,c$ & $a=\one^\top\Sigma^{-1}\one,\ b=\bmu^\top\Sigma^{-1}\one,\ c=\bmu^\top\Sigma^{-1}\bmu$ & scalars \\
+$d$ & $ac-b^2$ & scalar \\
+$\sigma^2_p$ & portfolio variance $\w^\top\Sigma\w$ & scalar \\
+\bottomrule
+\end{longtable}
+
+\subsection*{Connecting the data to the math}
+\begin{itemize}[nosep]
+  \item \textbf{One row} of $R$ is one month $t$.
+  \item \textbf{One column} of $R$ is one industry portfolio $i$ (NoDur, Durbl, Manuf, Enrgy, HiTec, Telcm, Shops, Hlth, Utils, Other).
+  \item \textbf{One entry} $R_{t,i} = (p_{t,i}-p_{t-1,i})/p_{t-1,i}$ is the return of portfolio $i$ in month $t$ (the file reports percent; we divide by 100).
+\end{itemize}
+
+% =====================================================================
+\section{Definitions}
+\begin{definition}[Random vector, expectation]\todo{}\end{definition}
+\begin{definition}[Covariance and covariance matrix]\todo{$\Sigma = \E[(\bm r-\bmu)(\bm r-\bmu)^\top]$}\end{definition}
+\begin{definition}[Sample mean and sample covariance]\todo{$\hat\Sigma = \frac{1}{T-1}R_c^\top R_c$, $R_c = R - \one\hat\bmu^\top$}\end{definition}
+\begin{definition}[Symmetric, positive (semi-)definite matrix]\todo{}\end{definition}
+\begin{definition}[Portfolio, budget constraint $\one^\top\w = 1$]\todo{}\end{definition}
+\begin{definition}[Gradient of $\w^\top A\w$ and $\bm{c}^\top\w$]\todo{}\end{definition}
+\begin{definition}[Lagrangian and Lagrange multiplier]\todo{}\end{definition}
+\begin{definition}[Efficient frontier]\todo{}\end{definition}
+
+% =====================================================================
+\section{Assumptions}
+\begin{longtable}{@{}p{3.6cm} p{5.6cm} p{5.4cm}@{}}
+\toprule
+Assumption & What breaks if it fails & How we check it (Iteration 3) \\
+\midrule
+A1. $\bmu,\Sigma$ constant over time (stationarity) & $\hat\bmu,\hat\Sigma$ estimate an average of changing quantities; optimal weights are not optimal out of sample & \todo{rolling-window estimates of $\hat\bmu,\hat\Sigma$} \\
+A2. $\Sigma$ positive definite (no redundant asset) & $\Sigma^{-1}$ does not exist; $\w^*$ and $a,b,c$ undefined & \todo{smallest eigenvalue / condition number of $\hat\Sigma$} \\
+A3. $T > N$ & $\hat\Sigma$ has rank $\le T-1 < N$, so it is singular & \todo{check $T$ vs $N$} \\
+A4. $\bmu$ not a multiple of $\one$ & $d = ac-b^2 = 0$; the $2\times2$ system is singular & \todo{check $d>0$} \\
+A5. Investors care only about mean and variance (or returns jointly normal) & variance misses skewness / fat tails & \todo{histograms, QQ-plots, kurtosis} \\
+A6. Short selling allowed, no transaction costs & constrained problem has no closed form & \todo{report negative weights} \\
+\bottomrule
+\end{longtable}
+
+% =====================================================================
+\section{Derivations}
+% Rule: name the rule used at EVERY step with \by{...}.
+
+\begin{proposition}[Portfolio return and risk]\label{prop:q1}
+For $\w\in\R^N$ and random returns $\bm r$ with mean $\bmu$ and covariance $\Sigma$,
+\[
+\E\Big[\textstyle\sum_i w_iR_i\Big] = \w^\top\bmu, \qquad
+\Var\Big(\textstyle\sum_i w_iR_i\Big) = \w^\top\Sigma\w .
+\]
+\end{proposition}
+\begin{proof}
+\todo{Linearity of expectation; $\Var(\sum_i X_i)=\sum_i\sum_j\Cov(X_i,X_j)$; bilinearity of covariance; write the double sum as a quadratic form.}
+\end{proof}
+\owner{\todo{}}{\todo{}}
+
+\begin{proposition}[$\Sigma$ is positive semi-definite]\label{prop:q2}
+$\Sigma$ (and $\hat\Sigma$) is symmetric and $\bm z^\top\Sigma\bm z\ge 0$ for all $\bm z\in\R^N$. Hence portfolio risk is never negative.
+\end{proposition}
+\begin{proof}
+\todo{Symmetry from $\Cov(X,Y)=\Cov(Y,X)$; $\bm z^\top\Sigma\bm z = \Var(\bm z^\top\bm r)\ge0$; for $\hat\Sigma$: $\bm z^\top\hat\Sigma\bm z = \frac{1}{T-1}\|R_c\bm z\|^2$.}
+\end{proof}
+\owner{\todo{}}{\todo{}}
+
+\begin{theorem}[Global minimum-variance portfolio]\label{thm:q3}
+If $\Sigma$ is positive definite, the solution of $\min_{\w}\ \w^\top\Sigma\w$ subject to $\one^\top\w=1$ is
+\[
+\w^* = \frac{\Sigma^{-1}\one}{\one^\top\Sigma^{-1}\one}, \qquad \sigma^2_{\min} = \frac{1}{\one^\top\Sigma^{-1}\one}.
+\]
+\end{theorem}
+\begin{proof}
+\todo{Lagrangian $L(\w,\lambda)=\w^\top\Sigma\w-\lambda(\one^\top\w-1)$; $\nabla_\w L = 2\Sigma\w-\lambda\one=0$; solve for $\w$; use constraint to find $\lambda$; argue it is a minimum (convexity, Prop.~\ref{prop:q2}).}
+\end{proof}
+\owner{\todo{}}{\todo{}}
+
+\begin{theorem}[Target-return portfolio]\label{thm:q4}
+The solution of $\min_{\w}\ \tfrac12\w^\top\Sigma\w$ subject to $\w^\top\bmu=r$ and $\one^\top\w=1$ is $\w = \Sigma^{-1}(\lambda_1\bmu+\lambda_2\one)$, where
+\[
+\begin{bmatrix} c & b\\ b & a\end{bmatrix}\begin{bmatrix}\lambda_1\\ \lambda_2\end{bmatrix} = \begin{bmatrix} r\\ 1\end{bmatrix}.
+\]
+\end{theorem}
+\begin{proof}
+\todo{Lagrangian with two multipliers; stationarity; substitute into both constraints; show the $2\times2$ matrix is invertible when $d=ac-b^2>0$ (Cauchy--Schwarz in the $\Sigma^{-1}$ inner product).}
+\end{proof}
+\owner{\todo{}}{\todo{}}
+
+\begin{theorem}[The efficient frontier is a parabola]\label{thm:q5}
+The minimum variance at target return $r$ is
+\[
+\sigma^2(r) = \frac{a r^2 - 2 b r + c}{ac-b^2},
+\]
+a parabola in the $(\sigma^2, r)$ plane with vertex at $r = b/a$, $\sigma^2 = 1/a$ (the portfolio of Theorem~\ref{thm:q3}).
+\end{theorem}
+\begin{proof}
+\todo{$\sigma^2 = \w^\top\Sigma\w = \lambda_1 r + \lambda_2$; solve the $2\times2$ system by Cramer's rule; complete the square.}
+\end{proof}
+\owner{\todo{}}{\todo{}}
+
+% =====================================================================
+\section{Iteration 2 -- Math Questions}
+\begin{enumerate}[label=\textbf{Q\arabic*.}]
+  \item Derive portfolio return $\w^\top\bmu$ and risk $\w^\top\Sigma\w$ from $\Var(\sum_i w_iR_i)$. \hfill See Proposition~\ref{prop:q1}.
+  \item Prove that $\Sigma$ is positive semi-definite, so risk is never negative. \hfill See Proposition~\ref{prop:q2}.
+  \item Minimize $\w^\top\Sigma\w$ subject to $\one^\top\w=1$ and derive $\w^*$. \hfill See Theorem~\ref{thm:q3}.
+  \item Add $\w^\top\bmu=r$; derive the $2\times2$ system for the multipliers. \hfill See Theorem~\ref{thm:q4}.
+  \item Show the efficient frontier is a parabola in $(\sigma^2,r)$. \hfill See Theorem~\ref{thm:q5}.
+\end{enumerate}
+
+% =====================================================================
+\section{The Algorithm as Math}
+Input $R\in\R^{T\times N}$, target returns $r_1,\dots,r_K$.
+\begin{enumerate}[label=(\arabic*)]
+  \item $\hat\bmu = \frac1T R^\top\one_T$. \hfill sizes $N\times T$, $T$; \ $\approx NT$ flops.
+  \item $R_c = R - \one_T\hat\bmu^\top$. \hfill $T\times N$; \ $NT$ flops.
+  \item $\hat\Sigma = \frac{1}{T-1}R_c^\top R_c$. \hfill $N\times N$; \ $\approx 2N^2T$ flops (or $N^2T$ using symmetry).
+  \item Solve $\hat\Sigma\bm x = \one$ and $\hat\Sigma\bm y = \hat\bmu$ (one LU / Cholesky factorization, two triangular solves). \hfill $\approx \frac23N^3 + 4N^2$ flops (Cholesky: $\frac13N^3$).
+  \item $a=\one^\top\bm x,\ b=\hat\bmu^\top\bm x,\ c=\hat\bmu^\top\bm y,\ d=ac-b^2$. \hfill $\approx 6N$ flops.
+  \item $\w^* = \bm x / a$. \hfill $N$ flops.
+  \item For each $r_k$: solve $\begin{bmatrix}c&b\\b&a\end{bmatrix}\bm\lambda = \begin{bmatrix}r_k\\1\end{bmatrix}$, then $\w_k = \lambda_1\bm y + \lambda_2\bm x$ and $\sigma^2_k=\lambda_1 r_k+\lambda_2$. \hfill $O(N)$ flops each.
+\end{enumerate}
+Total cost: $O(N^2T + N^3 + KN)$; for $N=10$ the $N^2T$ term dominates.
+
+% =====================================================================
+\section{Data}
+\todo{Paste output of \texttt{python src/load\_data.py}: rows, columns, variable types, missing values, sample period.}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.85\linewidth]{data_cumulative.png}
+\caption{Growth of \$1 in each of the 10 industry portfolios.}
+\end{figure}
+\begin{figure}[h]\centering
+\includegraphics[width=\linewidth]{data_risk_return_corr.png}
+\caption{Left: annualized mean vs.\ standard deviation. Right: correlation matrix.}
+\end{figure}
+
+% =====================================================================
+\section{Simulation}
+\subsection*{Simulation Check}
+\textbf{Model.} $\bm r_t \overset{\text{iid}}{\sim}\mathcal N(\bmu,\Sigma)$, $N=4$, $T=2000$, seed \texttt{default\_rng(0)}, with
+$\bmu=(0.05,0.08,0.12,0.07)^\top$, volatilities $(0.10,0.15,0.25,0.12)$, and $\Sigma = \operatorname{diag}(\text{vol})\,C\,\operatorname{diag}(\text{vol})$ for the correlation matrix $C$ in \texttt{src/simulate.py}.
+
+\begin{center}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+ & Asset 1 & Asset 2 & Asset 3 & Asset 4\\
+\midrule
+$\mu$ (true)        & 0.0500 & 0.0800 & 0.1200 & 0.0700\\
+$\hat\mu$ ($T=2000$) & 0.0490 & 0.0793 & 0.1178 & 0.0680\\
+$\w^*$ (true $\Sigma$) & 0.5296 & 0.1277 & $-0.0275$ & 0.3701\\
+$\w^*$ ($\hat\Sigma$, $T=2000$) & 0.5316 & 0.1406 & $-0.0338$ & 0.3616\\
+$\w^*$ ($\hat\Sigma$, $T=60$) & 0.5835 & 0.1953 & $-0.0228$ & 0.2440\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[nosep]
+  \item \textbf{Q1:} $\w^{*\top}\hat\Sigma\w^* = 0.00641188$ equals the sample variance of $R\w^*$ exactly.
+  \item \textbf{Q2:} all eigenvalues of $\hat\Sigma$ are positive (smallest $0.00875$).
+  \item \textbf{Q3:} none of 40{,}000 random weight vectors summing to 1 has lower variance than $\w^*$.
+  \item \textbf{Q4:} for every target $r$, the solved weights satisfy both constraints to within $10^{-15}$.
+  \item \textbf{Q5:} $\w^\top\hat\Sigma\w$ matches $(ar^2-2br+c)/d$ to within $10^{-16}$; the vertex $b/a=0.0578$ equals $\w^{*\top}\hat\bmu$.
+  \item \textbf{Estimation error:} $\|\hat\w^*-\w^*\| = 0.017$ for $T=2000$ but $0.153$ for $T=60$.
+\end{itemize}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.7\linewidth]{sim_frontier.png}
+\caption{True and estimated efficient frontiers with random portfolios.}
+\end{figure}
+
+\end{document}
