@@ -9,7 +9,7 @@ the target-return 2×2 multiplier system, and the efficient frontier as a parabo
 ```
 src/        Python code (numpy, pandas, matplotlib, scipy.stats only)
   portfolio.py   core math: sample moments, w*, 2x2 system, frontier (from scratch)
-  load_data.py   download + describe the real dataset, save data figures
+  load_data.py   download 9 stock prices (yfinance), describe returns, save figures
   simulate.py    simulation with known truth; checks Q1–Q5 numerically
 data/       raw/ (downloaded, NOT in Git) and processed/ (generated)
 figures/    plots produced by the scripts
@@ -26,16 +26,16 @@ pip install -r requirements.txt
 
 ## Data
 
-**Kenneth French Data Library — 10 Industry Portfolios, monthly.**
-One row = one month; one column = one industry portfolio; one entry = that
-portfolio's return that month.
+**Daily returns of 9 tech stocks** — AAPL, NVDA, GOOGL, META, AMZN, AMD, PLTR, MU, INTC —
+from Yahoo Finance (adjusted close, via `yfinance`), 2020-09-30 (PLTR's first trading
+day) to today. One row = one trading day; one column = one stock; one entry =
+that stock's simple daily return `(p_t - p_{t-1}) / p_{t-1}`.
 
-`python src/load_data.py` downloads it automatically into `data/raw/`. If the
-download fails, get it by hand:
+`python src/load_data.py` downloads the prices into `data/raw/prices_adjclose.csv`
+on first run and reuses that file afterwards (`--refresh` to re-download).
+`yfinance` is used only to fetch the raw prices; all analysis uses numpy/pandas.
 
-1. Go to <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
-2. Under *Industry Portfolios*, download **10 Industry Portfolios** (CSV).
-3. Put the `.zip` (or the extracted `.CSV`) in `data/raw/`.
+SpaceX (SPCX) was left out: it IPO'd on 2026-06-12, so it has too short a history.
 
 Raw files are ignored by Git (see `.gitignore`).
 
@@ -43,7 +43,7 @@ Raw files are ignored by Git (see `.gitignore`).
 
 ```bash
 python src/simulate.py                  # simulation check (seed 0) -> figures/sim_frontier.png
-python src/load_data.py --start 1990-01 # describe real data -> figures/data_*.png
+python src/load_data.py                 # describe real data -> figures/data_*.png
 ```
 
 ## Report
