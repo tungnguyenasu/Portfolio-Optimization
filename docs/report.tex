@@ -32,8 +32,7 @@
 
 \title{DS5020 Final Project -- Iteration 2\\[2pt]
 \large Portfolio Optimization: The Math Foundation}
-\author{\todo{Member 1} \and \todo{Member 2} \and \todo{Member 3} \and \todo{Member 4}\\[4pt]
-\small Project Leader (Iteration 2): \todo{name}}
+\author{Tung Nguyen(Project Leader) \and Vinh Pham\\[4pt]}
 \date{Fall 2026}
 
 \begin{document}
@@ -45,13 +44,13 @@
 \toprule
 ID & Task & Owner & Checker \\
 \midrule
-D1 / Q1 & Portfolio return and risk                 & \todo{} & \todo{} \\
-D2 / Q2 & $\Sigma$ is positive semi-definite         & \todo{} & \todo{} \\
-D3 / Q3 & Global minimum-variance portfolio          & \todo{} & \todo{} \\
-D4 / Q4 & Target-return constraint, $2\times2$ system & \todo{} & \todo{} \\
-D5 / Q5 & Efficient frontier is a parabola           & \todo{} & \todo{} \\
-S1      & Data loading and description               & \todo{} & \todo{} \\
-S2      & Simulation check                           & \todo{} & \todo{} \\
+D1 / Q1 & Portfolio return and risk                  & Vinh Pham & Tung Nguyen \\
+D2 / Q2 & $\Sigma$ is positive semi-definite         & Vinh Pham & Tung Nguyen \\
+D3 / Q3 & Global minimum-variance portfolio          & Vinh Pham & Tung Nguyen \\
+D4 / Q4 & Target-return constraint, $2\times2$ system & Tung Nguyen & Vinh Pham \\
+D5 / Q5 & Efficient frontier is a parabola           & Tung Nguyen & Vinh Pham \\
+S1      & Data loading and description               & Tung Nguyen & Vinh Pham \\
+S2      & Simulation check                           & Tung Nguyen & Vinh Pham \\
 \bottomrule
 \end{tabular}
 
@@ -61,12 +60,13 @@ S2      & Simulation check                           & \todo{} & \todo{} \\
 \toprule
 Symbol & Meaning & Dimension \\
 \midrule
-$N$ & number of assets (stocks) & scalar, $N=9$ \\
-$T$ & number of trading days & scalar, $T=1538$ \\
-$p_{t,i}$ & adjusted closing price of stock $i$ on day $t$ & scalar \\
-$R_{t,i}$ & simple daily return of stock $i$ on day $t$ & scalar \\
-$R$ & data matrix of returns; row $t$ = trading day, column $i$ = stock & $\R^{T\times N}$ \\
-$\bm{r}_t$ & return vector on day $t$ (row $t$ of $R$, as a column) & $\R^{N}$ \\
+$X$ & Historical asset returns matrix & $\mathbb{R}^{T\times n}$ \\
+$X_{t,i}$ & Return of asset i during period t & $\mathbb{R}$ \\
+$N$ & number of assets (industry portfolios) & scalar, $N=10$ \\
+$T$ & number of time periods (months) & scalar \\
+$R_{t,i}$ & simple return of asset $i$ in period $t$ & scalar \\
+$R$ & data matrix of returns; row $t$ = period, column $i$ = asset & $\R^{T\times N}$ \\
+$\bm{r}_t$ & return vector in period $t$ (row $t$ of $R$, as a column) & $\R^{N}$ \\
 $\bmu$ & expected return vector, $\mu_i = \E[R_i]$ & $\R^{N}$ \\
 $\Sigma$ & covariance matrix, $\Sigma_{ij} = \Cov(R_i,R_j)$ & $\R^{N\times N}$ \\
 $\hat\bmu,\ \hat\Sigma$ & sample mean and sample covariance & $\R^{N}$, $\R^{N\times N}$ \\
@@ -83,22 +83,22 @@ $\sigma^2_p$ & portfolio variance $\w^\top\Sigma\w$ & scalar \\
 
 \subsection*{Connecting the data to the math}
 \begin{itemize}[nosep]
-  \item \textbf{One row} of $R$ is one trading day $t$ between 2020-10-01 and 2026-11-13.
-  \item \textbf{One column} of $R$ is one stock $i\in\{$AAPL, NVDA, GOOGL, META, AMZN, AMD, PLTR, MU, INTC$\}$.
-  \item \textbf{One entry} $R_{t,i} = (p_{t,i}-p_{t-1,i})/p_{t-1,i}$ is the return of stock $i$ on day $t$, computed from adjusted closing prices (so splits and dividends are accounted for).
-  \item \textbf{One weight} $w_i$ is the fraction of wealth held in stock $i$; $w_i<0$ means a short position.
+  \item \textbf{One row} of $R$ is one month $t$.
+  \item \textbf{One column} of $R$ is one industry portfolio $i$ (NoDur, Durbl, Manuf, Enrgy, HiTec, Telcm, Shops, Hlth, Utils, Other).
+  \item \textbf{One entry} $R_{t,i} = (p_{t,i}-p_{t-1,i})/p_{t-1,i}$ is the return of portfolio $i$ in month $t$ (the file reports percent; we divide by 100).
 \end{itemize}
 
 % =====================================================================
 \section{Definitions}
-\begin{definition}[Random vector, expectation]\todo{}\end{definition}
-\begin{definition}[Covariance and covariance matrix]\todo{$\Sigma = \E[(\bm r-\bmu)(\bm r-\bmu)^\top]$}\end{definition}
-\begin{definition}[Sample mean and sample covariance]\todo{$\hat\Sigma = \frac{1}{T-1}R_c^\top R_c$, $R_c = R - \one\hat\bmu^\top$}\end{definition}
-\begin{definition}[Symmetric, positive (semi-)definite matrix]\todo{}\end{definition}
-\begin{definition}[Portfolio, budget constraint $\one^\top\w = 1$]\todo{}\end{definition}
-\begin{definition}[Gradient of $\w^\top A\w$ and $\bm{c}^\top\w$]\todo{}\end{definition}
-\begin{definition}[Lagrangian and Lagrange multiplier]\todo{}\end{definition}
-\begin{definition}[Efficient frontier]\todo{}\end{definition}
+\begin{definition}[Random vector, expectation]A random vector is a collection of random variables grouped into a single vector where each element represents a possible numerical outcome that depends on chance. Expectation is the probability weighted average of all possible outcomes of a random variable. \end{definition}
+\begin{definition}[Covariance and covariance matrix]Covariance measures how two variables change in relation to one another. Covariance Matrix can defined as $\Sigma = \E[(\bm r-\bmu)(\bm r-\bmu)^\top]$ where each entry represents the covariance between asset returns.\end{definition}
+\begin{definition}[Sample mean and sample covariance]Sample mean vector is defined as the average return of each asset across all observed periods. The sample mean gets used in the centered return matrix, $R_c = R - \one\hat\bmu^\top$, by subtracting the sample mean of each asset. Sample covariance $\hat\Sigma = \frac{1}{T-1}R_c^\top R_c$, where each entry represents the sample covariance between the returns of assets.\end{definition}
+\begin{definition}[Symmetric, positive (semi-)definite matrix]Symmetric Matrix is a matrix equal to its transpose. Symmetric matrix is a positive semi-definite matrix if $x^\top A x \geq 0 \quad \forall x \in \mathbb{R}^n$  
+Symmetric matrix is a positive definite matrix if $x^\top A x > 0 \quad \forall x \in \mathbb{R}^n$ \end{definition}
+\begin{definition}[Portfolio, budget constraint $\one^\top\w = 1$]The budget constraint, $\one^\top\w = 1$, ensures that the sum of all asset weights in a portfolio equals to one representing 100\% of the total investment. \end{definition}
+\begin{definition}[Gradient of $\w^\top A\w$ and $\bm{c}^\top\w$]Gradient of $\w^\top A\w$ describes how a function changes with respect to each element of a vector. Gradient of $\bm{c}^\top\w$ describes how the function changes with respect to each element of the vector w. \end{definition}
+\begin{definition}[Lagrangian and Lagrange multiplier]Method of Lagrange multiplier is a mathematical strategy used to find the local maximum or minimum of a multi-variable function. Where the Lagrangian function is defined as, $\mathcal{L}(w,\lambda) = f(w) - \lambda g(w)$, where f(w) is the objective function, and g(w) = 0 is the equality constraint, and $\lambda$ is the Lagrange multiplier associated with the constraint\end{definition}
+\begin{definition}[Efficient frontier]Efficient frontier is the set of optimal portfolios that provide the highest expected return for a given level of risk.\end{definition}
 
 % =====================================================================
 \section{Assumptions}
@@ -110,7 +110,7 @@ A1. $\bmu,\Sigma$ constant over time (stationarity) & $\hat\bmu,\hat\Sigma$ esti
 A2. $\Sigma$ positive definite (no redundant asset) & $\Sigma^{-1}$ does not exist; $\w^*$ and $a,b,c$ undefined & \todo{smallest eigenvalue / condition number of $\hat\Sigma$} \\
 A3. $T > N$ & $\hat\Sigma$ has rank $\le T-1 < N$, so it is singular & \todo{check $T$ vs $N$} \\
 A4. $\bmu$ not a multiple of $\one$ & $d = ac-b^2 = 0$; the $2\times2$ system is singular & \todo{check $d>0$} \\
-A5. Investors care only about mean and variance (or returns jointly normal) & variance misses skewness / fat tails & histograms, QQ-plots, kurtosis. Already visible: excess kurtosis of daily returns is 3.8--17.9 (META 17.9, INTC 10.5), far from 0 for a normal \\
+A5. Investors care only about mean and variance (or returns jointly normal) & variance misses skewness / fat tails & \todo{histograms, QQ-plots, kurtosis} \\
 A6. Short selling allowed, no transaction costs & constrained problem has no closed form & \todo{report negative weights} \\
 \bottomrule
 \end{longtable}
@@ -127,17 +127,153 @@ For $\w\in\R^N$ and random returns $\bm r$ with mean $\bmu$ and covariance $\Sig
 \]
 \end{proposition}
 \begin{proof}
-\todo{Linearity of expectation; $\Var(\sum_i X_i)=\sum_i\sum_j\Cov(X_i,X_j)$; bilinearity of covariance; write the double sum as a quadratic form.}
+
+\textbf{Step 1: Prove the expected portfolio return.}
+By the definition of expected return,
+\begin{align*}
+&=\E\left[\sum_{i=1}^{N}w_iR_i\right]
+\by{Definition of portfolio return}\\
+&=\sum_{i=1}^{N}w_i\E[R_i]
+\by{Linearity of expectation}\\
+&=\sum_{i=1}^{N}w_i\mu_i
+\by{Definition of expected return}\\
+&=\w^\top\bmu
+\by{Dot product definition}.
+\end{align*}
+
+Therefore, $\mathbb{E}\left[\sum_{i=1}^{N}w_iR_i\right] = \w^\top\bmu$
+
+\textbf{Step 2: Prove the portfolio variance.}
+\begin{align*}
+\operatorname{Var}(R_p)
+&=\operatorname{Var}\left(
+\sum_{i=1}^{N}w_iR_i\right)
+\by{Definition of portfolio return}\\
+&=\sum_{i=1}^{N}\sum_{j=1}^{N}
+\operatorname{Cov}(w_iR_i,w_jR_j)
+\by{Variance of a sum}\\
+&=\sum_{i=1}^{N}\sum_{j=1}^{N}w_iw_j\operatorname{Cov}(R_i,R_j)
+\by{Bilinearity of Covariance}\\
+&=\sum_{i=1}^{N}\sum_{j=1}^{N}w_iw_j\Sigma_{ij}
+\by{Definition of Covariance Matrix}\\
+&=\sum_{i=1}^{N}w_i
+\left(\sum_{j=1}^{N}\Sigma_{ij}w_j\right)
+\by{Rearranging the sums}\\
+&=\sum_{i=1}^{N}w_i(\Sigma\w)_i
+\by{Matrix-vector multiplication}\\
+&=\w^\top\Sigma\w.
+\by{Dot product definition}
+\end{align*}
+
+
+Therefore,
+$\E[\textstyle\sum_i w_iR_i\Big]=\w^\top\bmu,
+\qquad
+\Var(\textstyle\sum_i w_iR_i\Big)=\w^\top\Sigma\w$
 \end{proof}
-\owner{\todo{}}{\todo{}}
+\owner{Vinh Pham}{Tung Nguyen}
 
 \begin{proposition}[$\Sigma$ is positive semi-definite]\label{prop:q2}
 $\Sigma$ (and $\hat\Sigma$) is symmetric and $\bm z^\top\Sigma\bm z\ge 0$ for all $\bm z\in\R^N$. Hence portfolio risk is never negative.
 \end{proposition}
 \begin{proof}
-\todo{Symmetry from $\Cov(X,Y)=\Cov(Y,X)$; $\bm z^\top\Sigma\bm z = \Var(\bm z^\top\bm r)\ge0$; for $\hat\Sigma$: $\bm z^\top\hat\Sigma\bm z = \frac{1}{T-1}\|R_c\bm z\|^2$.}
+Let $\bm r=(r_1, \ldots, r_N)^\top$ be the random vector of asset returns, with expected return $\bmu=\mathbb{E}[\bm r]$
+Let $r_i = X$ and $r_j = Y$
+The covariance matrix is defined as $\Sigma_{ij}=\operatorname{Cov}(X, Y).$
+
+\textbf{Step 1: Prove that $\Sigma$ is symmetric.}
+By the definition of covariance,
+\begin{align*}
+\Sigma_{ij}
+&=\operatorname{Cov}(X, Y)
+\by{Definition of covariance}\\
+&=\mathbb{E}[(X -\mu_i)(Y-\mu_j)]
+\by{Covariance formula}\\
+&=\mathbb{E}[(Y-\mu_j)(X-\mu_i)]
+\by{Commutative property}\\
+&=\operatorname{Cov}(Y,X)
+\by{Definition of covariance}\\
+&=\Sigma_{ji}.
+\by{Matrix entry definition}
+\end{align*}
+
+Since $\Sigma_{ij}=\Sigma_{ji}$ for all $i,j$. we can conclude that $\Sigma^\top=\Sigma$
+
+\textbf{Step 2: Prove positive semi-definiteness.}
+Let $\bm z\in\mathbb{R}^N$ be any vector.
+Consider the linear combination $X=\bm z^\top\bm r =\sum_{i=1}^N z_i r_i.$
+By linearity of expectation,
+$\mathbb{E}[X]=\sum_{i=1}^N z_i\mu_i=\bm z^\top\bmu.$
+
+Using the definition of variance,
+\begin{align*}
+\operatorname{Var}(X)
+&=\mathbb{E}[(X-\mu)^2] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2, \mu = \mathbb{E}[X]
+\by{Definition of variance}\\
+&=\mathbb{E}\left[
+\left(\sum_{i=1}^{N}z_i(r_i-\mu_i)\right)^2
+\right]
+\by{Substitution}\\
+&=\mathbb{E}\left[
+\left(\sum_{i=1}^{N}z_i(r_i-\mu_i)\right)
+\left(\sum_{j=1}^{N}z_j(r_j-\mu_j)\right)
+\right]
+\by{Definition of square}\\
+&=\sum_{i=1}^{N}\sum_{j=1}^{N}
+z_i z_j\mathbb{E}[
+(r_i-\mu_i)(r_j-\mu_j)]
+\by{Linearity of expectation}\\
+&=\sum_{i=1}^N\sum_{j=1}^N
+z_i z_j\Sigma_{ij}
+\by{Definition of covariance}\\
+&=\sum_{i=1}^{N}
+z_i\left(\sum_{j=1}^{N}\Sigma_{ij}z_j\right)
+\by{Rearranging the sums}\\
+&=\sum_{i=1}^{N}z_i(\Sigma\bm z)_i
+\by{Matrix-vector multiplication}\\
+&=\bm z^\top\Sigma\bm z.
+\by{Dot product definition}
+\end{align*}
+
+Therefore,
+$\bm z^\top\Sigma\bm z =\operatorname{Var}(\bm z^\top\bm r).$
+
+Since squared real numbers are nonnegative,
+$(X-\mathbb{E}[X])^2\ge 0.$
+Thus, $\bm z^\top\Sigma\bm z\ge 0.$
+
+\textbf{Step 3: Prove positive semi-definiteness
+of the sample covariance matrix.}
+
+The sample covariance matrix is defined as $\hat\Sigma=\frac{1}{T-1}R_c^\top R_c$,
+where $R_c$ is the centered return matrix
+and $T>1$ is the number of observations.
+
+For any $\bm z\in\mathbb{R}^N$,
+\begin{align*}
+\bm z^\top\hat\Sigma\bm z
+&=\bm z^\top
+\left(\frac{1}{T-1}R_c^\top R_c\right)\bm z
+\by{Substitution}\\
+&=\frac{1}{T-1}
+\bm z^\top R_c^\top R_c\bm z
+\by{Scalar multiplication}\\
+&=\frac{1}{T-1}
+(R_c\bm z)^\top(R_c\bm z)
+\by{Transpose property}\\
+&=\frac{1}{T-1}\|R_c\bm z\|_2^2 \geq 0
+\by{Definition of squared norm}\\
+\end{align*}
+
+Since $T>1$, we have $\frac{1}{T-1}>0$,
+and since $\|R_c\bm z\|^2\geq0$,
+the quadratic form is nonnegative.
+
+Therefore, $\bm z^\top\hat\Sigma\bm z =\frac{1}{T-1}\|R_c\bm z\|^2\geq0$
+
+Thus, $\hat\Sigma$ is positive semi-definite.
 \end{proof}
-\owner{\todo{}}{\todo{}}
+\owner{Vinh Pham}{Tung Nguyen}
 
 \begin{theorem}[Global minimum-variance portfolio]\label{thm:q3}
 If $\Sigma$ is positive definite, the solution of $\min_{\w}\ \w^\top\Sigma\w$ subject to $\one^\top\w=1$ is
@@ -146,23 +282,114 @@ If $\Sigma$ is positive definite, the solution of $\min_{\w}\ \w^\top\Sigma\w$ s
 \]
 \end{theorem}
 \begin{proof}
-\todo{Lagrangian $L(\w,\lambda)=\w^\top\Sigma\w-\lambda(\one^\top\w-1)$; $\nabla_\w L = 2\Sigma\w-\lambda\one=0$; solve for $\w$; use constraint to find $\lambda$; argue it is a minimum (convexity, Prop.~\ref{prop:q2}).}
+We want to minimize portfolio variance
+$\w^\top\Sigma\w$ subject to the constraint
+$\one^\top\w=1$
+
+\textbf{Step 1: Define the Lagrangian.}
+
+Using the method of Lagrange multipliers, we define
+$L(\w,\lambda)=\w^\top\Sigma\w-\lambda(\one^\top\w-1)$
+
+\textbf{Step 2: Differentiate the Lagrangian.}
+Taking the gradient with respect to $\w$,
+\begin{align*}
+\nabla_{\w}L
+=2\Sigma\w-\lambda\one
+&=\bm 0
+\by{Quadratic and linear gradient rules}\\
+\end{align*}
+
+\textbf{Step 3: Solve for $\w$.}
+
+Rearranging the first-order condition,
+\begin{align*}
+2\Sigma\w-\lambda\one
+&= \bm0
+\by{First-order condition}\\
+2\Sigma\w
+&=\lambda\one
+\by{Rearranging}\\
+\Sigma\w
+&=\frac{\lambda}{2}\one
+\by{Division by 2}\\
+\w
+&=\frac{\lambda}{2}\Sigma^{-1}\one.
+\by{Multiplying by $\Sigma^{-1}$}
+\end{align*}
+
+Since $\Sigma$ is positive definite,
+$\Sigma^{-1}$ exists.
+
+\textbf{Step 4: Use the constraint to find $\lambda$.}
+
+Using $\one^\top\w=1$, substitute the expression
+for $\w$:
+\begin{align*}
+\one^\top\w
+&=1
+\by{Constraint}\\
+\one^\top\left(
+\frac{\lambda}{2}\Sigma^{-1}\one
+\right)
+&=1
+\by{Substitution}\\
+\frac{\lambda}{2}
+\one^\top\Sigma^{-1}\one
+&=1
+\by{Scalar multiplication}\\
+\lambda
+&=\frac{2}{\one^\top\Sigma^{-1}\one}.
+\by{Solving for $\lambda$}
+\end{align*}
+
+Substituting $\lambda$ back into $\w$,
+\begin{align*}
+\w^*
+&=\frac{\lambda}{2}\Sigma^{-1}\one
+\by{Expression for $\w$}\\
+&=\frac{1}{2}
+\left(\frac{2}{\one^\top\Sigma^{-1}\one}\right)
+\Sigma^{-1}\one
+\by{Substitution}\\
+&=\frac{\Sigma^{-1}\one}
+{\one^\top\Sigma^{-1}\one}.
+\by{Simplification}
+\end{align*}
+
+\textbf{Step 5: Prove that the solution is a global minimum.}
+
+From Proposition~\ref{prop:q2}, $\Sigma$ is
+positive semi-definite, so
+$\bm z^\top\Sigma\bm z\geq 0$
+for every $\bm z\in\mathbb{R}^N$.
+
+Since $\Sigma$ is assumed positive definite,
+$\bm z^\top\Sigma\bm z>0$
+for every nonzero $\bm z$.
+
+Therefore, the quadratic objective
+$\w^\top\Sigma\w$ is strictly convex.
+The constraint $\one^\top\w=1$ is linear.
+
+Hence, the stationary point $\w^*$ is the
+unique global minimum.
+
+Therefore,
+$\w^*=\frac{\Sigma^{-1}\one}
+{\one^\top\Sigma^{-1}\one}
+\qquad
+\sigma_{\min}^2
+=\frac{1}{\one^\top\Sigma^{-1}\one}$
 \end{proof}
-\owner{\todo{}}{\todo{}}
+\owner{Vinh Pham}{Tung Nguyen}
 
 \begin{theorem}[Target-return portfolio]\label{thm:q4}
-Assume $\Sigma$ is positive definite (A2) and $\bmu$ is not a multiple of $\one$ (A4). Then for every $r\in\R$ the problem
+The solution of $\min_{\w}\ \tfrac12\w^\top\Sigma\w$ subject to $\w^\top\bmu=r$ and $\one^\top\w=1$ is $\w = \Sigma^{-1}(\lambda_1\bmu+\lambda_2\one)$, where
 \[
-\min_{\w\in\R^N}\ \tfrac12\w^\top\Sigma\w \quad\text{subject to}\quad \bmu^\top\w=r,\quad \one^\top\w=1
+\begin{bmatrix} c & b\\ b & a\end{bmatrix}\begin{bmatrix}\lambda_1\\ \lambda_2\end{bmatrix} = \begin{bmatrix} r\\ 1\end{bmatrix}.
 \]
-has the unique solution $\w = \Sigma^{-1}(\lambda_1\bmu+\lambda_2\one)$, where $(\lambda_1,\lambda_2)$ is the unique solution of the $2\times 2$ system
-\[
-\begin{bmatrix} c & b\\ b & a\end{bmatrix}\begin{bmatrix}\lambda_1\\ \lambda_2\end{bmatrix} = \begin{bmatrix} r\\ 1\end{bmatrix},
-\qquad a=\one^\top\Sigma^{-1}\one,\ \ b=\bmu^\top\Sigma^{-1}\one,\ \ c=\bmu^\top\Sigma^{-1}\bmu .
-\]
-(The factor $\tfrac12$ does not change the minimizer, since multiplying an objective by a positive constant preserves the ordering of its values.)
 \end{theorem}
-
 \begin{proof}
 \textbf{Step 1 (Lagrangian).} With one multiplier per equality constraint,
 \[
@@ -226,17 +453,15 @@ Then
 \end{align*}
 So every other feasible portfolio has strictly larger variance: $\w$ is the unique minimizer.
 \end{proof}
-\owner{\todo{}}{\todo{}}
+\owner{Tung Nguyen}{Vinh Pham}
 
 \begin{theorem}[The efficient frontier is a parabola]\label{thm:q5}
-Under the assumptions of Theorem~\ref{thm:q4}, with $d=ac-b^2>0$, the minimum variance at target return $r$ is
+The minimum variance at target return $r$ is
 \[
-\sigma^2(r) = \frac{a r^2 - 2 b r + c}{d}
-= \frac{a}{d}\Big(r-\frac{b}{a}\Big)^2 + \frac{1}{a},
+\sigma^2(r) = \frac{a r^2 - 2 b r + c}{ac-b^2},
 \]
-a parabola in the $(\sigma^2, r)$ plane that opens toward larger $\sigma^2$, with vertex at $\big(\sigma^2,r\big)=\big(1/a,\ b/a\big)$. The vertex is the global minimum-variance portfolio $\w^*$ of Theorem~\ref{thm:q3}.
+a parabola in the $(\sigma^2, r)$ plane with vertex at $r = b/a$, $\sigma^2 = 1/a$ (the portfolio of Theorem~\ref{thm:q3}).
 \end{theorem}
-
 \begin{proof}
 Let $\w$ be the minimizer from Theorem~\ref{thm:q4} for target $r$.
 
@@ -289,10 +514,7 @@ Every target $r\neq b/a$ needs strictly more variance than $1/a$, because $(r-b/
 \]
 so by eq.~\eqref{eq:w}, $\w=\frac{1}{a}\Sigma^{-1}\one = \dfrac{\Sigma^{-1}\one}{\one^\top\Sigma^{-1}\one}=\w^*$, and $\sigma^2=1/a=\sigma^2_{\min}$, matching Theorem~\ref{thm:q3}.
 \end{proof}
-
-\noindent\textit{Remark.} Only the upper branch $r\ge b/a$ is \emph{efficient}: for $r<b/a$ the portfolio with return $2b/a - r$ has the same variance and a higher return. In the $(\sigma,r)$ plane, with $\sigma=\sqrt{\sigma^2}$, the same curve is a hyperbola, as in Figure~\ref{fig:frontier}.
-\textit{Numerical check (simulation, $T=2000$):} $a=155.96$, $b=9.0178$, so the vertex is at $b/a=0.05782$, which equals $\w^{*\top}\hat\bmu$; the closed form matches $\w^\top\hat\Sigma\w$ to within $10^{-16}$ at every target $r$.
-\owner{\todo{}}{\todo{}}
+\owner{Tung Nguyen}{Vinh Pham}
 
 % =====================================================================
 \section{Iteration 2 -- Math Questions}
@@ -385,7 +607,7 @@ $\w^*$ ($\hat\Sigma$, $T=60$) & 0.5835 & 0.1953 & $-0.0228$ & 0.2440\\
 
 \begin{figure}[h]\centering
 \includegraphics[width=0.7\linewidth]{sim_frontier.png}
-\caption{True and estimated efficient frontiers with random portfolios.}\label{fig:frontier}
+\caption{True and estimated efficient frontiers with random portfolios.}
 \end{figure}
 
 \end{document}
