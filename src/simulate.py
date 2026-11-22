@@ -1,7 +1,14 @@
 """Simulation with known truth for Project 10 - Portfolio Optimization.
 
-We choose mu and Sigma for four assets, simulate returns, and check every
-derivation numerically (Q1-Q5). Seed is fixed so all members get the same numbers.
+The model (unchanged from Iteration 2): four assets with returns
+    r_t ~ iid N(mu, Sigma),   Sigma = diag(vol) Corr diag(vol),
+with mu, vol and Corr chosen below, so the true answer is known.
+
+Iteration 3 entry point:
+    R, mu, Sigma = simulate_returns(T, seed)
+
+Running this file directly reproduces the Iteration 2 simulation check (Q1-Q5)
+with exactly the same numbers as before (seed 0 for T = 2000, seed 1 for T = 60).
 
 Usage (from the project root):  python src/simulate.py
 """
@@ -30,13 +37,36 @@ T = 2000
 N = len(mu)
 
 
+def simulate_returns(T, seed=0):
+    """Draw T periods of returns for the 4-asset model with known mu and Sigma.
+
+    r_t ~ iid N(mu, Sigma),  t = 1, ..., T.
+
+    Parameters
+    ----------
+    T    : number of periods (rows of R).
+    seed : int seed for np.random.default_rng, or an existing Generator
+           (np.random.default_rng returns a Generator unchanged, so a caller can
+           keep drawing from the same stream afterwards).
+
+    Returns
+    -------
+    R     : (T, 4) simulated returns, one row per period, one column per asset.
+    mu    : (4,)   true expected returns.
+    Sigma : (4, 4) true covariance matrix.
+    """
+    rng = np.random.default_rng(seed)
+    R = rng.multivariate_normal(mu, Sigma, size=T)
+    return R, mu.copy(), Sigma.copy()
+
+
 def section(title):
     print("\n" + "=" * 70 + f"\n{title}\n" + "=" * 70)
 
 
 def main():
     rng = np.random.default_rng(0)
-    R = rng.multivariate_normal(mu, Sigma, size=T)
+    R, _, _ = simulate_returns(T, rng)      # same stream as Iteration 2
     m, S = sample_moments(R)
 
     section("Estimates vs truth (T = 2000)")
@@ -88,8 +118,7 @@ def main():
 
     # Estimation error: T = 2000 vs T = 60
     section("Estimation error: weights from T=2000 vs T=60 periods")
-    rng60 = np.random.default_rng(1)
-    R60 = rng60.multivariate_normal(mu, Sigma, size=60)
+    R60, _, _ = simulate_returns(60, seed=1)
     m60, S60 = sample_moments(R60)
     w60 = min_variance_weights(S60)
     print("w* true   :", w_true.round(4))
